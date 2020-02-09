@@ -7,17 +7,19 @@ from django.http import JsonResponse, HttpResponse
 
 class SignUpView(View):
     def post(self, request):
-        data = json.loads(request.body)
-        
-        if Account.objects.filter(email = data['email']).exists(): # 존재하는 이메일인지 확인
-            return HttpResponse(status=400) 
+i        data = json.loads(request.body)
+        try:
+            if Account.objects.filter(email = data['email']).exists(): # 존재하는 이메일인지 확인
+                return HttpResponse(status=400) 
 
-        Account(
-            email    = data['email'],
-            password = data['password']
-        ).save()
+            Account(
+                email    = data['email'],
+                password = data['password']
+            ).save()
        
-        return HttpResponse(status=200)
+            return HttpResponse(status=200)
+        except KeyError:
+            return JsonResponse({"message":"INVALID_KEYS"}, status = 400)
 
 class SignInView(View):
     def post(self, request):
