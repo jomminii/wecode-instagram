@@ -17,7 +17,6 @@ class SearchListView(View):
         SearchList.objects.all().delete()
         data = json.loads(request.body)
 
-
         # HTTP GET Request
         req = requests.get(
             f'https://search.naver.com/search.naver?where=post&sm=stb_jum&query={data["query"]}')
@@ -29,7 +28,7 @@ class SearchListView(View):
         soup = BeautifulSoup(html,'html.parser')
 
         post_title = soup.select(
-            'dl > dt > a.sh_blog_title._sp_each_url._sp_each_title'
+            ' dl > dt > a'
         )
 
         posting_date = soup.select(
@@ -51,5 +50,5 @@ class SearchListView(View):
         return HttpResponse(status=200)
 
     def get(self, request):
-        return JsonResponse({'search list : ' : list(SearchList.objects.values())}, status=200)
+        return JsonResponse({'search list' : list(SearchList.objects.values())}, status=200)
 
